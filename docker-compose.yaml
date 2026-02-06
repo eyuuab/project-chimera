@@ -1,0 +1,37 @@
+services:
+  # 1. The Chimera Agent Runtime (Your Code)
+  app:
+    build: .
+    volumes:
+      - .:/app  # Hot-reloading: changes in host update container
+    environment:
+      - DATABASE_URL=postgresql://chimera:secret@db:5432/chimera_db
+      - REDIS_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - db
+      - redis
+    command: ["uv", "run", "fastapi", "dev", "src/main.py", "--host", "0.0.0.0"]
+
+  # 2. The Brain's Ledger (PostgreSQL)
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=chimera
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=chimera_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 3. The Nervous System (Redis Task Queue)
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
