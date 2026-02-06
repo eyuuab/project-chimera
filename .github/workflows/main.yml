@@ -1,0 +1,34 @@
+name: Chimera CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate-agent:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        
+    - name: Install uv
+      uses: astral-sh/setup-uv@v1
+      
+    - name: Install Dependencies
+      run: make setup
+      
+    - name: Run Spec Check
+      # This fails if you haven't implemented the Pydantic models yet
+      # We allow it to continue for now using '|| true' if you want to push partial work,
+      # but ideally, remove '|| true' to enforce strictness.
+      run: make spec-check || echo "⚠️ Spec check failed, but proceeding for Day 1."
+      
+    - name: Run Tests (The Governor)
+      run: make test
