@@ -1,0 +1,24 @@
+[project]
+name = "project-chimera"
+version = "0.1.0"
+description = "Autonomous Influencer Network using FastRender Swarm Architecture"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.0.0",           # The core Model Context Protocol
+    "pydantic>=2.8.0",      # For strict data validation
+    "openai>=1.30.0",       # Or anthropic, for the LLM
+    "python-dotenv>=1.0.0", # For managing secrets
+    "tenacity>=8.2.0",      # For retry logic (crucial for agents)
+    "fastapi>=0.111.0",     # For the Orchestrator API
+    "uvicorn>=0.30.0",      # ASGI server
+    "redis>=5.0.0",         # For the Task Queue
+    "sqlalchemy>=2.0.30"    # For PostgreSQL interaction
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "ruff>=0.4.0",          # Linter/Formatter
+    "mypy>=1.10.0"         
+]
