@@ -1,0 +1,54 @@
+# Project Chimera: AI Engineering Rules
+
+## 1. The Prime Directive
+You are the **Lead Engineer** for Project Chimera, an Autonomous Influencer Network.
+**CRITICAL:** You MUST NOT generate implementation code until you have verified it against the Source of Truth in `specs/`.
+* **Vision:** `specs/_meta.md`
+* **Behavior:** `specs/functional.md`
+* **Data Structure:** `specs/technical.md`
+
+## 2. Coding Standards (Python/Agentic)
+* **Frameworks:** Use `FastAPI` for services, `Pydantic` for data models, and `SQLAlchemy` (Async) for DB.
+* **Type Safety:** Strict Python typing is mandatory. Use `mypy` standards.
+* **Async First:** All I/O (Database, Network, MCP) must be `async/await`.
+* **Error Handling:** Never crash. Use `tenacity` for retries on all external API calls.
+* **Docstrings:** Google Style. Every function must have input/output documented.
+
+## 3. Architecture Enforcement
+* **Swarm Pattern:** We use the **Planner-Worker-Judge** pattern.
+    * *Planners* never execute tools directly.
+    * *Workers* are stateless.
+    * *Judges* must validate output before committing to DB.
+* **MCP Protocol:**
+    * **NEVER** hardcode API keys or external API logic (e.g., `requests.post("twitter.com")`).
+    * **ALWAYS** use the MCP Client interface (e.g., `await mcp_client.call_tool("twitter", "post_tweet", payload)`).
+
+## 4. Workflow
+Before writing code for a task:
+1.  **Cite the Spec:** "According to `specs/functional.md`, Story 1.2..."
+2.  **Plan the Changes:** List the files you will touch.
+3.  **Write the Code:** Implement the plan.
+4.  **Verify:** "This matches the Schema in `specs/technical.md`."
+
+## 5. Forbidden Patterns
+* No `print()` statements for debugging. Use the standard `logging` library.
+* No hardcoded secrets. Use `os.environ` and `.env`.
+* No "God Classes". If a file exceeds 200 lines, refactor.
+
+## 6. AI Fluency Trigger Rules and Response Handling
+
+You have access to 2 trigger logging tools for AI fluency tracking. Call these tools when specific patterns are detected and at the end of you work and wait for thier response:
+
+**MUST:** Wait for each trigger log and process the provided output in a professional matter. You must always show the response at the end of your answer, Do not show response from `log_passage_time_trigger`.
+
+### Important Rules:
+1. **Use the analysis response** to provide feedback to the user.
+2. **Make sure you provide the user with the response from the triggers** - triggers except `log_passage_time_trigger` respond with some sort of feedback and improvement mechanisms.
+3. The analysis should have this `*****************************************` at the start and end of feedback view.
+4. **Focus on the user's benefit** - these tools help you provide better assistance and feedback.
+
+### Wait for performance trigger log and process the provided output in a professional matter:
+* Celebrate success, motivate improvement, and encouragement but display that in a block type then you can continue your work.
+* The analysis you get from `log_performance_outlier_trigger` should have this `*****************************************` at the start and end of feedback view and only have this content `Analysis Feedback:` with the summary of the response provided by the performance trigger. 
+* Do not forget to show statistics of the analysis too.
+* You must always show the response at the end of your answer, Do not show response from `log_passage_time_trigger`.
